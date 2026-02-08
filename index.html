@@ -549,6 +549,72 @@
                 opacity: 1;
             }
         }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.8rem 1rem;
+            }
+
+            #app-title {
+                font-size: 1.4rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .topic-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .module-nav {
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding-bottom: 0.5rem;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-btn {
+                flex-shrink: 0;
+                padding: 0.7rem 1.2rem;
+                white-space: nowrap;
+            }
+
+            .flashcard-container {
+                height: 400px;
+                /* Taller for mobile to fit text */
+            }
+
+            .card-content {
+                font-size: 1rem;
+            }
+
+            .mnemonic-code {
+                font-size: 1.2rem;
+            }
+
+            .q-text {
+                font-size: 1.05rem;
+            }
+
+            .option-btn {
+                padding: 0.9rem;
+            }
+
+            .acc-header {
+                padding: 1rem;
+            }
+
+            .acc-title {
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 
