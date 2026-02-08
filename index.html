@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatomy Learning - MBBS Year 1</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1E1E1E;
+            --primary-color: #00ADB5;
+            /* Medical Teal */
+            --secondary-color: #393E46;
+            --text-primary: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --accent-red: #FF5252;
+            --accent-amber: #FFC107;
+            --font-heading: 'Crimson Pro', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Utils */
+        .hidden {
+            display: none !important;
+        }
+
+        .tech-term {
+            font-family: var(--font-mono);
+            color: var(--primary-color);
+            font-size: 0.9em;
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Layout */
+        header {
+            background-color: var(--surface-color);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        #app-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        #nav-breadcrumbs {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Home Grid */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .topic-card {
+            background-color: var(--surface-color);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 200px;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            border-color: var(--primary-color);
+        }
+
+        .topic-number {
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .topic-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--text-primary);
+        }
+
+        /* Topic View */
+        .module-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-btn.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        /* Content Styling */
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            margin: 1.2rem 0 0.8rem;
+            color: var(--primary-color);
+        }
+
+        p,
+        li {
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .clinical-box {
+            border-left: 4px solid var(--accent-red);
+            background: rgba(255, 82, 82, 0.1);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .clinical-title {
+            color: var(--accent-red);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .exam-box {
+            border-left: 4px solid var(--accent-amber);
+            background: rgba(255, 193, 7, 0.1);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exam-title {
+            color: var(--accent-amber);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .badge-high-yield {
+            background: var(--accent-amber);
+            color: #000;
+        }
+
+        .badge-clinical {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        .badge-dev {
+            background: var(--primary-color);
+            color: #000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        th,
+        td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            color: var(--primary-color);
+            font-weight: 600;
+            border-bottom: 2px solid #444;
+        }
+
+        /* Module: Flashcards */
+        .flashcard-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 600px;
+            height: 350px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-color: var(--surface-color);
+            border: 1px solid #444;
+            border-radius: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .card-front {}
+
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #252525;
+            border-color: var(--primary-color);
+        }
+
+        .card-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .card-hint {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .flashcard-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            background-color: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* Module: Mnemonics */
+        .mnemonic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .mnemonic-card {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+
+        .mnemonic-code {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .m-char {
+            padding: 0.2rem 0.5rem;
+            background: rgba(0, 173, 181, 0.1);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .m-char:hover {
+            background: var(--primary-color);
+            color: #000;
+        }
+
+        .mnemonic-full {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+            display: none;
+        }
+
+        .mnemonic-full.visible {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        /* Module: Quiz */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-question {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #333;
+        }
+
+        .q-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            font-family: var(--font-heading);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .option-btn {
+            background: #2C2C2C;
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background: #333;
+        }
+
+        .option-btn.correct {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #4CAF50;
+            color: #81C784;
+        }
+
+        .option-btn.wrong {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: #F44336;
+            color: #E57373;
+        }
+
+        .explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #252525;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--primary-color);
+            display: none;
+        }
+
+        /* Module: Viva */
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .acc-item {
+            background: var(--surface-color);
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .acc-header {
+            padding: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #252525;
+        }
+
+        .acc-header:hover {
+            background: #2C2C2C;
+        }
+
+        .acc-title {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .acc-content {
+            padding: 1.5rem;
+            display: none;
+            border-top: 1px solid #333;
+            line-height: 1.7;
+        }
+
+        .acc-content.visible {
+            display: block;
+            animation: slideDown 0.3s;
+        }
+
+        .key-term {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div id="app-title" onclick="renderHome()">Anatomy<span style="color:var(--text-primary)">Master</span></div>
+        <div id="nav-breadcrumbs">Home</div>
+    </header>
+
+    <main id="main-content">
+        <!-- Dynamic Content Loaded Here -->
+    </main>
+
+    <script>
+        // --- DATA ---
+        const anatomyData = {
+            "duodenum": {
+                "title": "Duodenum",
+                "topicId": 5,
+                "modules": {
+                    "learn": `
+                    <h2>Location & General Features</h2>
+                    <p>The <span class="tech-term">duodenum</span> derives its name from the Latin <em>duodeni</em>, meaning twelve, as its length was originally measured as equal to the breadth of twelve fingers (approximately 25 cm). It acts as the C-shaped loop of the small intestine, curving around the head of the pancreas.</p>
+                    <p>It is the shortest, widest, and most fixed part of the small intestine. It extends from the pylorus of the stomach to the duodenojejunal flexure. While mostly retroperitoneal, its proximal 2.5 cm (the duodenal cap) is intraperitoneal.</p>
+
+                    <div class="clinical-box">
+                        <span class="clinical-title">Clinical Correlation: Duodenal Ulcers</span>
+                        Most duodenal ulcers occur in the first part (duodenal cap) because it receives the most acidic chyme directly from the stomach before it can be neutralized by alkaline pancreatic secretions.
+                    </div>
+
+                    <h2>Parts & Relations</h2>
+                    <p>The duodenum is divided into four distinct parts, each with specific vertebral levels and relations.</p>
+                    
+                    <table>
+                        <tr>
+                            <th>Part</th>
+                            <th>Length</th>
+                            <th>Vertebral Level</th>
+                            <th>Key Features</th>
+                        </tr>
+                        <tr>
+                            <td>1. Superior</td>
+                            <td>5 cm</td>
+                            <td>L1</td>
+                            <td>Duodenal cap (intraperitoneal), site of ulcers.</td>
+                        </tr>
+                        <tr>
+                            <td>2. Descending</td>
+                            <td>7.5 cm</td>
+                            <td>L1–L3</td>
+                            <td>Receives bile & pancreatic ducts.</td>
+                        </tr>
+                        <tr>
+                            <td>3. Horizontal</td>
+                            <td>10 cm</td>
+                            <td>L3</td>
+                            <td>Crosses between SMA and Aorta.</td>
+                        </tr>
+                        <tr>
+                            <td>4. Ascending</td>
+                            <td>2.5 cm</td>
+                            <td>L3–L2</td>
+                            <td>Ends at DJ flexure (Ligament of Treitz).</td>
+                        </tr>
+                    </table>
+
+                    <h2>The Second Part (Detail)</h2>
+                    <p>The second (descending) part is surgically significant due to its complex relations. <span class="badge badge-high-yield">High Yield</span></p>
+                    <ul>
+                        <li><strong>Anterior Relations:</strong> The transverse mesocolon attaches here, dividing the surface into a supracolic area (related to the liver) and an infracolic area (related to intestinal coils).</li>
+                        <li><strong>Posterior Relations:</strong> Direct contact with the right kidney, renal vessels, ureter, and right psoas major muscle.</li>
+                        <li><strong>Medial Relations:</strong> Hugs the head of the pancreas; receives the Main Pancreatic Duct and Bile Duct.</li>
+                        <li><strong>Lateral Relations:</strong> Right colic flexure (hepatic flexure).</li>
+                    </ul>
+
+                    <h3>Interior Features</h3>
+                    <p>The interior of the descending part features the <strong>Major Duodenal Papilla</strong> (Papilla of Vater) on the posteromedial wall, 8-10 cm adjacent to the pylorus. This is where the hepatopancreatic ampulla (of Vater) opens, guarded by the complex <strong>Sphincter of Oddi</strong>. The <strong>Minor Duodenal Papilla</strong> lies 2 cm proximal to the major papilla and receives the Accessory Pancreatic Duct (of Santorini).</p>
+
+                    <h2>Blood Supply & Development</h2>
+                    <p>The duodenum represents a critical junction in embryological development. The major papilla marks the boundary between the <span class="tech-term">Foregut</span> and <span class="tech-term">Midgut</span>.</p>
+                    <ul>
+                        <li><strong>Proximal to Major Papilla (Foregut):</strong> Supplied by the Superior Pancreaticoduodenal Artery (branch of Gastroduodenal Artery ← Coeliac Trunk).</li>
+                        <li><strong>Distal to Major Papilla (Midgut):</strong> Supplied by the Inferior Pancreaticoduodenal Artery (branch of Superior Mesenteric Artery).</li>
+                    </ul>
+                    <div class="exam-box">
+                        <span class="exam-title">Exam Tip</span>
+                        This dual blood supply forms important anastomotic arcades between the Coeliac Trunk and SMA systems on the anterior and posterior surfaces of the pancreatic head.
+                    </div>
+
+                    <div class="clinical-box">
+                        <span class="clinical-title">Applied Anatomy</span>
+                        <strong>SMA Syndrome:</strong> The 3rd part of the duodenum can be compressed between the Aorta (posteriorly) and the Superior Mesenteric Artery (anteriorly), especially in cases of rapid weight loss (loss of mesenteric fat pad). This leads to obstruction. <br><br>
+                        <strong>Posterior Duodenal Ulcer:</strong> While anterior ulcers tend to perforate into the peritoneal cavity, posterior ulcers in the 1st part can erode into the <strong>Gastroduodenal Artery</strong>, causing massive hemorrhage.
+                    </div>
+                `,
+                    "flashcards": [
+                        {
+                            "front": "What defines the extent of the duodenum?",
+                            "back": "It extends from the pylorus of the stomach to the duodenojejunal flexure. It is approximately 25 cm long and is the shortest, widest, and most fixed part of the small intestine."
+                        },
+                        {
+                            "front": "List the length and vertebral level of the 4 parts.",
+                            "back": "1. Superior: 5 cm (L1)\n2. Descending: 7.5 cm (L1-L3)\n3. Horizontal: 10 cm (L3)\n4. Ascending: 2.5 cm (L3-L2)"
+                        },
+                        {
+                            "front": "Why is the first part of the duodenum clinically unique?",
+                            "back": "The proximal 2.5 cm (Duodenal Cap) is intraperitoneal and mobile. It is the most common site for peptic ulcers due to direct exposure to acidic chyme before neutralization."
+                        },
+                        {
+                            "front": "Describe the posterior relations of the 2nd part of the duodenum.",
+                            "back": "It is related to the anterior surface of the Right Kidney, the Right Renal Vessels, the Right Ureter, and the Right Psoas Major muscle."
+                        },
+                        {
+                            "front": "What is the embryological significance of the Major Duodenal Papilla?",
+                            "back": "It represents the junction between the Foregut and the Midgut. Consequently, the blood supply shifts from the Coeliac Trunk (Superior Pancreaticoduodenal A.) to the SMA (Inferior Pancreaticoduodenal A.) at this level."
+                        },
+                        {
+                            "front": "What is SMA Syndrome?",
+                            "back": "Compression of the 3rd (horizontal) part of the duodenum as it passes between the Aorta and the Superior Mesenteric Artery. Often caused by loss of the intervening mesenteric fat pad."
+                        },
+                        {
+                            "front": "What distinctive histological feature is found in the Duodenal submucosa?",
+                            "back": "Brunner's Glands. These secrete alkaline mucus to neutralize the acidic chyme from the stomach, protecting the duodenal lining."
+                        },
+                        {
+                            "front": "Where does a posterior ulcer of the 1st part of the duodenum bleed into?",
+                            "back": "It can erode into the Gastroduodenal Artery, which runs directly posterior to the first part of the duodenum, causing severe hemorrhage."
+                        },
+                        {
+                            "front": "What structures open at the Major Duodenal Papilla?",
+                            "back": "The Hepatopancreatic Ampulla (Ampulla of Vater), formed by the union of the Common Bile Duct and the Main Pancreatic Duct. It is guarded by the Sphincter of Oddi."
+                        },
+                        {
+                            "front": "What is the Double Bubble sign?",
+                            "back": "A radiological sign seen in Duodenal Atresia (failure of recanalization). One bubble represents gas in the stomach, the other in the dilated proximal duodenum. Strongly associated with Down Syndrome."
+                        }
+                    ],
+                    "mnemonics": [
+                        {
+                            "code": "AL 123",
+                            "explanation": "To remember the vertebral levels of the 4 parts:<br><strong>1st Part:</strong> L1<br><strong>2nd Part:</strong> L2 (descends L1-L3)<br><strong>3rd Part:</strong> L3<br><strong>4th Part:</strong> L2 (ascends back to L2)"
+                        },
+                        {
+                            "code": "SDHA",
+                            "explanation": "The order of parts:<br><strong>S</strong>uperior (5cm)<br><strong>D</strong>escending (7.5cm)<br><strong>H</strong>orizontal (10cm)<br><strong>A</strong>scending (2.5cm)<br>Note the lengths increase: 1, 3, 4, 1 inches approx (2.5, 7.5, 10, 2.5 cm)."
+                        },
+                        {
+                            "code": "DAV",
+                            "explanation": "Relations in the hepatoduodenal ligament (from Right to Left):<br><strong>D</strong>uct (Bile Duct)<br><strong>A</strong>rtery (Hepatic Artery Proper)<br><strong>V</strong>ein (Portal Vein - posterior to both)"
+                        }
+                    ],
+                    "quiz": [
+                        {
+                            "question": "Which artery is most at risk of erosion from a posterior ulcer in the first part of the duodenum?",
+                            "options": ["Superior Mesenteric Artery", "Gastroduodenal Artery", "Splenic Artery", "Left Gastric Artery"],
+                            "correct": 1,
+                            "explanation": "The Gastroduodenal Artery descends immediately posterior to the first part of the duodenum. An ulcer eroding through the posterior wall can breach this vessel, leading to massive upper, GI bleeding."
+                        },
+                        {
+                            "question": "The 3rd part of the duodenum is crossed anteriorly by which structure?",
+                            "options": ["Transverse Colon", "Superior Mesenteric Artery", "Portal Vein", "Right Ureter"],
+                            "correct": 1,
+                            "explanation": "The 3rd (horizontal) part of the duodenum passes between the Aorta (posterior) and the Superior Mesenteric Artery (anterior). This anatomical arrangement is the basis for SMA syndrome."
+                        },
+                        {
+                            "question": "Which part of the duodenum contains the Major Duodenal Papilla?",
+                            "options": ["1st Part", "2nd Part", "3rd Part", "4th Part"],
+                            "correct": 1,
+                            "explanation": "The Major Duodenal Papilla is located on the posteromedial wall of the 2nd (descending) part of the duodenum, marking the entrance of the bile and pancreatic ducts."
+                        },
+                        {
+                            "question": "Embryologically, the duodenum is derived from?",
+                            "options": ["Foregut only", "Midgut only", "Foregut and Midgut", "Hindgut"],
+                            "correct": 2,
+                            "explanation": "The duodenum has a dual origin. The part proximal to the opening of the bile duct develops from the Foregut, while the part distal to it develops from the Midgut. This is reflected in its blood supply (Coeliac trunk and SMA)."
+                        },
+                        {
+                            "question": "Brunner's glands are characteristic of the:",
+                            "options": ["Duodenal mucosa", "Duodenal submucosa", "Jejunal submucosa", "Ileal mucosa"],
+                            "correct": 1,
+                            "explanation": "Brunner's glands are unique compound tubular mucous glands located in the SUBMUCOSA of the duodenum. They secrete alkaline mucus to neutralize stomach acid."
+                        }
+                    ],
+                    "viva": [
+                        {
+                            "question": "Describe the blood supply of the Duodenum and its developmental basis.",
+                            "answer": "The duodenum receives a dual blood supply because it is derived from both the foregut and the midgut. The junction is the Major Duodenal Papilla.<br><br>1. <strong>Proximal to the papilla (Foregut):</strong> Supplied by the Superior Pancreaticoduodenal artery (a branch of the Gastroduodenal artery, from the Coeliac Trunk).<br>2. <strong>Distal to the papilla (Midgut):</strong> Supplied by the Inferior Pancreaticoduodenal artery (a branch of the Superior Mesenteric Artery).<br><br>These arteries form anterior and posterior anastomotic arcades around the head of the pancreas, providing a crucial collateral circulation between the Coeliac and SMA territories."
+                        },
+                        {
+                            "question": "What is the Ligament of Treitz?",
+                            "answer": "The Ligament of Treitz is a suspensory muscle/ligament of the duodenum. It contains skeletal muscle fibers (from the diaphragm) and smooth muscle fibers (from the duodenum). It suspends the duodenojejunal flexure (the end of the 4th part) to the Right Crus of the Diaphragm near the esophageal opening. Clinically, it marks the boundary between Upper and Lower GI bleeding."
+                        },
+                        {
+                            "question": "Explain the relations of the 3rd part of the duodenum.",
+                            "answer": "The 3rd (horizontal) part lies at level L3. <br><strong>Anteriorly:</strong> It is crossed by the root of the mesentery and the Superior Mesenteric vessels (Artery and Vein).<br><strong>Posteriorly:</strong> It rests on the Right Ureter, Right Psoas Major, IVC, and the Abdominal Aorta (giving origin to the IMA).<br><strong>Superiorly:</strong> Head of Pancreas.<br><strong>Inferiorly:</strong> Coils of Jejunum."
+                        },
+                        {
+                            "question": "What are the clinical features of SMA Syndrome?",
+                            "answer": "SMA Syndrome (Wilkie's syndrome) is a compression of the 3rd part of the duodenum between the Aorta and the SMA. It typically occurs in patients with rapid weight loss (loss of the retroperitoneal fat pad that usually cushions the angle). Symptoms include postprandial pain, early satiety, and bilious vomiting (obstruction is distal to the bile duct entry)."
+                        }
+                    ]
+                }
+            },
+            "caecum": {
+                "title": "Caecum",
+                "topicId": 6,
+                "modules": {
+                    "learn": `
+                    <h2>Morphology & Location</h2>
+                    <p>The <span class="tech-term">Caecum</span> (Latin: <em>caecus</em> = blind) is a large, blind pouch of the large intestine. It is situated in the <strong>Right Iliac Fossa</strong>, above the lateral half of the inguinal ligament.</p>
+                    <p><strong>Dimensions:</strong> It is approximately 6 cm long and 7.5 cm wide (it is one of the few organs that is wider than it is long). It is completely covered by peritoneum (intraperitoneal), but usually lacks a mesentery. This allows for some mobility, but excessive mobility can lead to <span class="highlight">Caecal Volvulus</span>.</p>
+
+                    <h2>Relations</h2>
+                    <ul>
+                        <li><strong>Anterior:</strong> Anterior abdominal wall, coils of small intestine, and greater omentum. Can be palpated in RIF if distended.</li>
+                        <li><strong>Posterior:</strong> Resting on the Right Iliacus and Psoas Major muscles. Key nerves here are the <strong>Lateral Cutaneous Nerve of Thigh</strong> and the <strong>Femoral Nerve</strong>.</li>
+                        <li><strong>Medial:</strong> The Appendix arises from its posteromedial aspect.</li>
+                        <li><strong>Superior:</strong> Continues as the Ascending Colon; junction marked by the ileocaecal valve.</li>
+                    </ul>
+                    <div class="clinical-box">
+                        <span class="clinical-title">Clinical Correlation: Retrocaecal Abscess</span>
+                        An abscess posterior to the caecum can irritate the underlying Ilio-psoas muscle, causing pain on extension of the right hip (Psoas Sign). It can also irritate the Femoral Nerve, causing pain referred to the thigh.
+                    </div>
+
+                    <h2>Interior Features</h2>
+                    <p>The interior communicates with the ileum via the <strong>Ileocaecal Orifice</strong> and with the appendix via the <strong>Appendicular Orifice</strong>.</p>
+                    <ul>
+                        <li><strong>Ileocaecal Valve (of Bauhin):</strong> Guarded by two lips (Upper/horizontal and Lower/concave). They fuse laterally to form the frenula of Morgagni. It is a functional valve, preventing reflux from colon to ileum, but not a true anatomical sphincter.</li>
+                        <li><strong>Taeniae Coli:</strong> The three longitudinal muscle bands (Taenia libera, mesocolica, omentalis) converge at the base of the appendix, serving as a guide to locate it during surgery.</li>
+                    </ul>
+
+                    <h3>Types of Caecum</h3>
+                    <p>The shape of the caecum varies by development:</p>
+                    <ol>
+                        <li><strong>Fetal (2%):</strong> Conical, appendix arises from apex.</li>
+                        <li><strong>Infantile (3%):</strong> Quadrate, appendix arises from depression between equal saccules.</li>
+                        <li><strong>Normal / Adult (90%):</strong> The right saccule grows faster than the left, pushing the appendix to the posteromedial side. This is the classic asymmetrical shape.</li>
+                        <li><strong>Exaggerated (4-5%):</strong> Right saccule is huge, appendix appears near the ileocaecal junction.</li>
+                    </ol>
+
+                    <h2>Blood Supply & Lymphatics</h2>
+                    <p><strong>Arteries:</strong> Anterior and Posterior Caecal Arteries (branches of the Ileocolic Artery ← SMA). The posterior caecal artery is larger and also supplies the base of the appendix.</p>
+                    <p><strong>Veins:</strong> Drain into the Ileocolic vein → SMV → Portal Vein. <span class="badge badge-clinical">Important</span>: Portal pyaemia (spread of infection via veins) from caecal or appendicular inflammation can lead to liver abscesses.</p>
+                    
+                    <div class="exam-box">
+                        <span class="exam-title">Exam Tip</span>
+                        <strong>Caecal Carcinoma:</strong> Because the caecum is wide and the contents are liquid, tumors here do not cause obstruction until very late. Patients often present with anaemia (due to occult bleeding) and a palpable mass, rather than constipation (unlike left-sided cancers).
+                    </div>
+                `,
+                    "flashcards": [
+                        {
+                            "front": "What are the dimensions of the caecum?",
+                            "back": "It is approximately 6 cm in length and 7.5 cm in breadth. It is unique in being wider than it is long."
+                        },
+                        {
+                            "front": "Where is the caecum located?",
+                            "back": "In the Right Iliac Fossa, above the lateral half of the inguinal ligament."
+                        },
+                        {
+                            "front": "What important nerves lie posterior to the caecum?",
+                            "back": "The Lateral Cutaneous Nerve of the Thigh and the Femoral Nerve (lying in the groove between Iliacus and Psoas Major)."
+                        },
+                        {
+                            "front": "Describe the Ileocaecal Valve.",
+                            "back": "It has two lips: an Upper (horizontal, from ileocolic junction) and a Lower (concave, from ileocaecal junction). They fuse to form the Frenula of the Valve (of Morgagni). It prevents reflux."
+                        },
+                        {
+                            "front": "What is the most common type of Caecum shape?",
+                            "back": "The Adult type (Type III), found in 90% of people. The right saccule grows much larger than the left, causing the appendix to originate from the posteromedial wall."
+                        },
+                        {
+                            "front": "What guides the surgeon to the appendix during an appendectomy?",
+                            "back": "The three Taeniae Coli (Libera, Mesocolica, Omentalis) all converge at the posteromedial aspect of the caecum, specifically at the base of the appendix."
+                        },
+                        {
+                            "front": "Why is Caecal Volvulus possible?",
+                            "back": "While the caecum is retroperitoneal in terms of blood supply approach, it is intraperitoneal and covered by peritoneum. If it has an excessive mesentery or mobility, it can twist on itself (volvulus), causing obstruction."
+                        },
+                        {
+                            "front": "How does Caecal Carcinoma typically present?",
+                            "back": "It presents late because the lumen is wide and contents are liquid. Symptoms are usually weakness/anaemia (from chronic blood loss) and a mass in the RIF, rather than intestinal obstruction."
+                        },
+                        {
+                            "front": "What is McBurney's Point?",
+                            "back": "The point at the junction of the lateral 1/3 and medial 2/3 of the line joining the Anterior Superior Iliac Spine (ASIS) to the Umbilicus. It marks the base of the appendix/caecum."
+                        },
+                        {
+                            "front": "Where does the venous drainage of the caecum go?",
+                            "back": "Via the Ileocolic Vein to the Superior Mesenteric Vein, and eventually to the Portal Vein. This route allows infections or emboli to reach the liver."
+                        }
+                    ],
+                    "mnemonics": [
+                        {
+                            "code": "FIA E",
+                            "explanation": "Types of Caecum:<br><strong>F</strong>etal (conical)<br><strong>I</strong>nfantile (quadrate)<br><strong>A</strong>dult (asymmetric - commonest)<br><strong>E</strong>xaggerated"
+                        },
+                        {
+                            "code": "PLC",
+                            "explanation": "Posterior relations of Caecum (Variables):<br><strong>P</strong>soas major<br><strong>L</strong>ateral cutaneous nerve of thigh<br><strong>C</strong>rust of the ilium (Iliacus muscle)<br>+ Femoral nerve"
+                        }
+                    ],
+                    "quiz": [
+                        {
+                            "question": "Which of the following nerves lies immediately posterior to the caecum?",
+                            "options": ["Genitofemoral nerve", "Femoral nerve", "Obturator nerve", "Sciatic nerve"],
+                            "correct": 1,
+                            "explanation": "The caecum rests on the Iliopsoas muscle bed. The Fermoral nerve lies in the groove between the Psoas major and Iliacus muscles, directly posterior to the caecum."
+                        },
+                        {
+                            "question": "The three taeniae coli converge at which structure?",
+                            "options": ["Ileocaecal valve", "Rectosigmoid junction", "Base of the Appendix", "Hepatic flexure"],
+                            "correct": 2,
+                            "explanation": "The taeniae coli (longitudinal muscle bands) converge at the base of the appendix on the posteromedial wall of the caecum. This is a crucial landmark for locating the appendix during surgery."
+                        },
+                        {
+                            "question": "Caecal carcinoma most commonly presents with:",
+                            "options": ["Acute intestinal obstruction", "Severe constipation", "Anaemia and RIF mass", "Jaundice"],
+                            "correct": 2,
+                            "explanation": "Caecal cancers rarely obstruct early because the lumen is wide and stool is liquid. Instead, they ulcerate and bleed, causing iron-deficiency anaemia and a palpable mass in the right iliac fossa."
+                        },
+                        {
+                            "question": "Which artery supplies the caecum?",
+                            "options": ["Right Colic", "Ileocolic", "Middle Colic", "Inferior Mesenteric"],
+                            "correct": 1,
+                            "explanation": "The Ileocolic artery (a branch of the SMA) gives off Anterior and Posterior Caecal arteries to supply the caecum."
+                        },
+                        {
+                            "question": "The Adult type of caecum is characterized by:",
+                            "options": ["Conical shape", "Equal saccules", "Large right saccule", "Large left saccule"],
+                            "correct": 2,
+                            "explanation": "In the Adult type (90%), the right saccule grows much faster than the left. This differential growth pushes the appendix's origin to the medial side."
+                        }
+                    ],
+                    "viva": [
+                        {
+                            "question": "Describe the interior of the Caecum.",
+                            "answer": "The interior shows two main openings: <br>1. <strong>Ileocaecal Orifice:</strong> Guarded by the Ileocaecal valve (of Bauhin), which has upper and lower lips and frenula. It functions to prevent reflux.<br>2. <strong>Appendicular Orifice:</strong> Located about 2 cm below the ileocaecal valve. It is often guarded by a small fold mainly mucous membrane called the Valve of Gerlach."
+                        },
+                        {
+                            "question": "What are the boundaries of the Ileocaecal Valve?",
+                            "answer": "The valve is formed by the invagination of the terminal ileum into the caecum. <br><strong>Upper Lip:</strong> Horizontal, formed by the ileocolic junction.<br><strong>Lower Lip:</strong> Concave, formed by the ileocaecal junction.<br>Laterally, they fuse to form the <strong>Frenula of the Valve</strong>."
+                        },
+                        {
+                            "question": "Discuss the applied anatomy of caecal volvulus.",
+                            "answer": "Caecal volvulus is the twisting of the caecum around its mesentery. It typically occurs when the caecum and ascending colon have a persistent mesentery (developmental anomaly), making them mobile. It leads to closed-loop obstruction and possible ischemia. Radiographically, it appears as a large air-filled loop pointing to the LUQ (coffee bean sign)."
+                        },
+                        {
+                            "question": "Why does an abscess in the RIF cause thigh pain?",
+                            "answer": "An abscess in the right iliac fossa (e.g., retrocaecal appendicitis or caecal perforation) sits on the Iliopsoas muscle. The inflammation can irritate the dorsal parietal peritoneum and the underlying nerves:<br>1. <strong>Femoral Nerve:</strong> Causing pain referred to the anterior thigh/knee.<br>2. <strong>Psoas Muscle:</strong> Causing spasm, leading to flexion deformity of the hip (Psoas sign)."
+                        }
+                    ]
+                }
+            },
+            "appendix": {
+                "title": "Appendix",
+                "topicId": 7,
+                "modules": {
+                    "learn": `
+                        <h2>Morphology & Dimensions</h2>
+                        <p>The <span class="tech-term">Vermiform Appendix</span> (vermis = worm) is a narrow, worm-shaped diverticulum arising from the posteromedial wall of the caecum. It contains a large amount of lymphoid tissue, often referred to as the <strong>"Abdominal Tonsil"</strong>.</p>
+                        <p><strong>Dimensions:</strong> Length varies from 2 to 20 cm (average 9 cm). Diameter is about 5 mm. Its base is constant (at the convergence of taeniae coli), but its tip can point anywhere (like the hands of a clock).</p>
+                        <p><strong>Peritoneum:</strong> It is intraperitoneal and has a triangular fold of mesentery called the <span class="highlight">Mesoappendix</span>, which contains the appendicular artery.</p>
+
+                        <h2>Positions of Appendix</h2>
+                        <p>The tip of the appendix can be found in various positions. <span class="badge badge-high-yield">High Yield</span></p>
+                        <ul>
+                            <li><strong>Retrocaecal (65%):</strong> Most common. Behind the caecum. Clinical sign: Pain on extending the right hip (Psoas sign).</li>
+                            <li><strong>Pelvic (31%):</strong> Over the pelvic brim so hangs into the true pelvis. Relations: In females, right ovary and uterine tube; in males, rectum. Clinical sign: Pain on internal rotation of the flexed right hip (Obturator sign) or suprapubic pain mimicking UTI/PID.</li>
+                            <li><strong>Subcaecal (2%):</strong> Below the caecum.</li>
+                            <li><strong>Pre-ileal (1%):</strong> In front of the terminal ileum.</li>
+                            <li><strong>Post-ileal (0.5%):</strong> Behind the terminal ileum.</li>
+                        </ul>
+
+                        <h2>Blood Supply & Lymphatics</h2>
+                        <p><strong>Artery:</strong> The <span class="highlight">Appendicular Artery</span>. It is a branch of the inferior division of the ileocolic artery. Crucially, it is an <strong>END ARTERY</strong>.
+                        <br><em>Significance:</em> If the artery is obstructed (e.g., by thrombosis due to infection), the blood supply is cut off completely (no anastomoses), leading rapidly to gangrene and perforation.</p>
+                        
+                        <p><strong>Veins:</strong> Follow the artery to join the Ileocolic vein.</p>
+                        
+                        <p><strong>Nerve Supply:</strong> Supplied by Sympathetic nerves from T10 segment (via lesser splanchnic nerve).
+                        <br><em>Pain referral:</em> Early appendicitis pain is felt around the <strong>Umbilicus</strong> (T10 dermatome). Later, when the parietal peritoneum is irritated, pain localizes to the <strong>Right Iliac Fossa</strong>.</p>
+
+                        <div class="clinical-box">
+                            <span class="clinical-title">Clinical Correlation: Acute Appendicitis</span>
+                            <strong>Murphy's Sequence of Symptoms:</strong>
+                            <ol>
+                                <li>Pain (Periumbilical first, then RIF)</li>
+                                <li>Vomiting (Nausea)</li>
+                                <li>Temperature (Mild fever)</li>
+                                <li>Tenderness (at McBurney's point)</li>
+                            </ol>
+                            If vomiting precedes pain, appendicitis is unlikely.
+                        </div>
+
+                        <div class="exam-box">
+                            <span class="exam-title">Exam Tip</span>
+                            <strong>McBurney's Point:</strong> Located at the junction of the lateral 1/3 and medial 2/3 of the spinoumbilical line (ASIS to Umbilicus). It corresponds to the base of the appendix. Maximum tenderness here is a hallmark sign.
+                        </div>
+                    `,
+                    "flashcards": [
+                        {
+                            "front": "What is the most common position of the appendix?",
+                            "back": "Retrocaecal (65%). The appendix lies behind the caecum."
+                        },
+                        {
+                            "front": "Which artery supplies the appendix?",
+                            "back": "The Appendicular Artery, a branch of the inferior division of the Ileocolic Artery."
+                        },
+                        {
+                            "front": "Why is the appendicular artery clinically critical?",
+                            "back": "It is an End Artery. Blockage (thrombosis) leads to ischemia, gangrene, and perforation because there is no collateral circulation."
+                        },
+                        {
+                            "front": "Explain the shifting pain in appendicitis.",
+                            "back": "Pain starts as dull/aching around the umbilicus (referred pain from T10 visceral afferents). As inflammation spreads to the parietal peritoneum, the pain shifts to become sharp and localized in the Right Iliac Fossa."
+                        },
+                        {
+                            "front": "What is the Psoas Sign?",
+                            "back": "Pain on extension of the right thigh. It indicates inflammation of a Retrocaecal appendix lying against the Psoas major muscle."
+                        },
+                        {
+                            "front": "What is the Obturator Sign?",
+                            "back": "Pain on passive internal rotation of the flexed right thigh. It indicates irritation from a Pelvic appendix lying against the Obturator internus muscle."
+                        },
+                        {
+                            "front": "What is McBurney's point?",
+                            "back": "The point of maximum tenderness in appendicitis. It lies at the junction of the lateral 1/3 and medial 2/3 of the line joining the ASIS to the Umbilicus."
+                        },
+                        {
+                            "front": "The appendix is sometimes called the 'Abdominal Tonsil'. Why?",
+                            "back": "Because its submucosa is packed with lymphoid follicles (GALT - Gut Associated Lymphoid Tissue), which are part of the immune system."
+                        },
+                        {
+                            "front": "In a female, what are the important relations of a pelvic appendix?",
+                            "back": "It relates to the Right Ovary and the Right Uterine Tube. Appendicitis can mimic PID or ruptured ectopic pregnancy."
+                        },
+                        {
+                            "front": "What is the Alvarado Score used for?",
+                            "back": "It is a clinical scoring system (MANTRELS) used to diagnose acute appendicitis based on symptoms, signs, and lab values."
+                        }
+                    ],
+                    "mnemonics": [
+                        {
+                            "code": "MANTRELS",
+                            "explanation": "Alvarado Score:<br><strong>M</strong>igration of pain<br><strong>A</strong>norexia<br><strong>N</strong>ausea/vomiting<br><strong>T</strong>enderness in RIF (2 pts)<br><strong>R</strong>ebound tenderness<br><strong>E</strong>levated temperature<br><strong>L</strong>eukocytosis (2 pts)<br><strong>S</strong>hift to left (neutrophils)"
+                        },
+                        {
+                            "code": "Clock",
+                            "explanation": "Positions of Appendix:<br>12 o'clock: Retrocaecal<br>2 o'clock: Splenic (Pre/Post Ileal)<br>4 o'clock: Pelvic<br>6 o'clock: Subcaecal<br>(Tip moves, base is fixed at center)"
+                        }
+                    ],
+                    "quiz": [
+                        {
+                            "question": "The initial pain of acute appendicitis is referred to the:",
+                            "options": ["Epigastrium", "Umbilicus", "Right Iliac Fossa", "Right Hypochondrium"],
+                            "correct": 1,
+                            "explanation": "The appendix is supplied by T10 sympathetic fibers. Visceral pain traverses these fibers to the T10 spinal segment, which also receives somatic sensation from the umbilical dermatome."
+                        },
+                        {
+                            "question": "The appendicular artery is a branch of:",
+                            "options": ["Right Colic Artery", "Anterior Caecal Artery", "Inferior division of Ileocolic Artery", "Superior Mesenteric Artery directly"],
+                            "correct": 2,
+                            "explanation": "The appendicular artery usually arises from the inferior division of the Ileocolic artery. It passes through the mesoappendix to reach the tip."
+                        },
+                        {
+                            "question": "Which position of the appendix is most likely to cause a positive Obturator sign?",
+                            "options": ["Retrocaecal", "Pelvic", "Post-ileal", "Subcaecal"],
+                            "correct": 1,
+                            "explanation": "The Pelvic appendix hangs down into the true pelvis against the obturator internus muscle. Inflammation here causes pain when the muscle is stretched (internal rotation of flexed hip)."
+                        },
+                        {
+                            "question": "The base of the appendix is located at the convergence of:",
+                            "options": ["Plicae circulares", "Villi", "Taeniae coli", "Haustra"],
+                            "correct": 2,
+                            "explanation": "The three taeniae coli of the ascending colon and caecum converge at the base of the appendix. This is the most reliable landmark to find the appendix during surgery."
+                        },
+                        {
+                            "question": "Gangrene of the appendix is common because its artery is:",
+                            "options": ["A functional end artery", "An anatomical end artery", "A large elastic artery", "Subject to vasospasm"],
+                            "correct": 1,
+                            "explanation": "The appendicular artery is an end artery. If it gets thrombosed (due to infection/pressure), there is no collateral blood supply, leading to rapid ischemic necrosis (gangrene)."
+                        }
+                    ],
+                    "viva": [
+                        {
+                            "question": "Why is the appendicular artery called an 'End Artery' and what is the clinical implication?",
+                            "answer": "It is an end artery because it forms no significant anastomoses with other arteries. If the appendicular artery is blocked (e.g., by thrombosis secondary to inflammation and edema), the blood supply to the appendix is completely cut off. This leads to gangrene and subsequent perforation of the appendix."
+                        },
+                        {
+                            "question": "What is the anatomical basis of the Psoas Sign?",
+                            "answer": "The Psoas sign is positive when extension of the right hip causes pain. This occurs in <strong>Retrocaecal Appendicitis</strong> (65% of cases). The inflamed appendix lies directly on the Psoas Major muscle (posterior relation), and stretching the muscle causes pain."
+                        },
+                        {
+                            "question": "Differentiate between the pain of early vs. late appendicitis.",
+                            "answer": "<strong>Early:</strong> Visceral pain. Dull, aching, poorly localized around the umbilicus. Mediated by sympathetic afferents (T10). <br><strong>Late:</strong> Somatic pain. Sharp, severe, well-localized to the Right Iliac Fossa (McBurney's point). Mediated by somatic spinal nerves innervating the inflamed parietal peritoneum."
+                        },
+                        {
+                            "question": "What are the boundaries of the Triangle of Appendicitis (Sherren's Triangle)?",
+                            "answer": "It is an area of skin hyperesthesia in acute appendicitis. <br><strong>Boundaries:</strong> <br>1. Summit of Right ASIS<br>2. Pubic Tubercle<br>3. Umbilicus"
+                        }
+                    ]
+                }
+            },
+            "portal_vein": {
+                "title": "Portal Vein",
+                "topicId": 8,
+                "modules": {
+                    "learn": `
+                        <h2>Formation & Course</h2>
+                        <p>The <span class="tech-term">Portal Vein</span> is a large vein (8 cm long) that collects blood from the abdominal part of the alimentary tract, pancreas, spleen, and gallbladder, and conveys it to the liver.</p>
+                        <p><strong>Formation:</strong> Formed by the union of the <strong>Superior Mesenteric Vein</strong> and the <strong>Splenic Vein</strong> behind the neck of the pancreas, at the level of L2 vertebra.</p>
+                        <p><strong>Course:</strong> It ascends behind the first part of the duodenum and enters the right free margin of the lesser omentum (hepatoduodenal ligament). It reaches the porta hepatis where it divides into right and left terminal branches.</p>
+
+                        <h2>Relations in Hepatoduodenal Ligament</h2>
+                        <p>Within the free edge of the lesser omentum, three key structures run together. <span class="badge badge-high-yield">High Yield</span></p>
+                        <ul>
+                            <li><strong>Bile Duct:</strong> Anterior and to the Right.</li>
+                            <li><strong>Hepatic Artery Proper:</strong> Anterior and to the Left.</li>
+                            <li><strong>Portal Vein:</strong> Posterior to both.</li>
+                        </ul>
+                        <p><em>Mnemonic:</em> <strong>DAV</strong> (from right to left: Duct, Artery, Vein is NOT correct relationally in transverse section, but useful for content). Better: <strong>D</strong>uct right, <strong>A</strong>rtery left, <strong>V</strong>ein posterior.</p>
+
+                        <h2>Tributaries</h2>
+                        <ul>
+                            <li>Splenic Vein and Superior Mesenteric Vein (Formatives)</li>
+                            <li>Left Gastric Vein and Right Gastric Vein (Drain lesser curvature)</li>
+                            <li>Superior Pancreaticoduodenal Vein</li>
+                            <li>Cystic Vein (Drains gallbladder)</li>
+                            <li>Para-umbilical Veins (Connect with systemic veins at umbilicus)</li>
+                        </ul>
+
+                        <h2>Portocaval Anastomoses</h2>
+                        <p>These are communications between the Portal and Systemic (Caval) venous systems. In Portal Hypertension (e.g., Cirrhosis), these channels open up, leading to clinical signs.</p>
+                        <table>
+                            <tr>
+                                <th>Site</th>
+                                <th>Portal Component</th>
+                                <th>Systemic Component</th>
+                                <th>Clinical Sign</th>
+                            </tr>
+                            <tr>
+                                <td>Lower Oesophagus</td>
+                                <td>Left Gastric V.</td>
+                                <td>Azygos V. tributaries</td>
+                                <td>Oesophageal Varices (Haematemesis)</td>
+                            </tr>
+                            <tr>
+                                <td>Anal Canal</td>
+                                <td>Superior Rectal V.</td>
+                                <td>Middle/Inf. Rectal V.</td>
+                                <td>Haemorrhoids (Piles)</td>
+                            </tr>
+                            <tr>
+                                <td>Umbilicus</td>
+                                <td>Para-umbilical V.</td>
+                                <td>Supf. Epigastric V.</td>
+                                <td>Caput Medusae</td>
+                            </tr>
+                            <tr>
+                                <td>Bare area of Liver</td>
+                                <td>Hepatic Venules</td>
+                                <td>Phrenic/Intercostal V.</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Retroperitoneum</td>
+                                <td>Colic Veins</td>
+                                <td>Renal/Lumbar Veins</td>
+                                <td>(Retzius veins)</td>
+                            </tr>
+                        </table>
+
+                        <div class="clinical-box">
+                            <span class="clinical-title">Clinical Correlation: Portal Hypertension</span>
+                            <p>Obstruction to portal flow (e.g., Cirrhosis) raises portal pressure (>40 mmHg). Since the portal vein has no valves, backpressure is transmitted to tributaries.</p>
+                            <ul>
+                                <li><strong>Oesophageal Varices:</strong> Most dangerous. Rupture causes massive haematemesis (vomiting blood).</li>
+                                <li><strong>Caput Medusae:</strong> Dilated veins radiating from the umbilicus.</li>
+                                <li><strong>Splenomegaly:</strong> Congestive enlargement of the spleen.</li>
+                                <li><strong>Ascites:</strong> Fluid accumulation in the peritoneal cavity.</li>
+                            </ul>
+                        </div>
+                    `,
+                    "flashcards": [
+                        {
+                            "front": "How is the Portal Vein formed?",
+                            "back": "By the union of the Superior Mesenteric Vein and the Splenic Vein behind the neck of the pancreas at the level of L2."
+                        },
+                        {
+                            "front": "What are the relations of the Portal Vein in the Hepatoduodenal ligament?",
+                            "back": "It lies POSTERIOR to both the Bile Duct (which is anterior & right) and the Hepatic Artery Proper (which is anterior & left)."
+                        },
+                        {
+                            "front": "List the main tributaries of the Portal Vein.",
+                            "back": "1. Splenic Vein\n2. Superior Mesenteric Vein\n3. Left Gastric Vein\n4. Right Gastric Vein\n5. Superior Pancreaticoduodenal Vein\n6. Cystic Vein\n7. Para-umbilical Veins"
+                        },
+                        {
+                            "front": "What is the clinical significance of the Left Gastric Vein in portal hypertension?",
+                            "back": "It anastomoses with oesophageal tributaries of the Azygos vein. In portal hypertension, these dilate to form Oesophageal Varices, which can rupture causing life-threatening haematemesis."
+                        },
+                        {
+                            "front": "What defines Caput Medusae?",
+                            "back": "It is a sign of portal hypertension where para-umbilical veins (portal) anastomose with superficial epigastric veins (systemic) around the umbilicus, appearing like the head of Medusa."
+                        },
+                        {
+                            "front": "Why does the Portal Vein not have valves?",
+                            "back": "The absence of valves allows blood to flow in either direction depending on pressure gradients. This facilitates the retrograde flow that opens up portocaval anastomoses during portal hypertension."
+                        },
+                        {
+                            "front": "Describe the portocaval anastomosis at the anal canal.",
+                            "back": "Between the Superior Rectal Vein (Portal via IMV) and the Middle/Inferior Rectal Veins (Systemic via Internal Iliac). Dilation leads to internal haemorrhoids."
+                        },
+                        {
+                            "front": "What is the vertebral level of the origin of the Portal Vein?",
+                            "back": "L2 Vertebra, behind the neck of the pancreas."
+                        },
+                        {
+                            "front": "Where does the Portal Vein terminate?",
+                            "back": "It terminates at the Porta Hepatis by dividing into Right and Left branches before entering the liver substance."
+                        },
+                        {
+                            "front": "What is the surgical importance of the veins of Retzius?",
+                            "back": "They are retroperitoneal anastomoses between colic veins (portal) and lumbar/renal veins (systemic). They can dilate in portal hypertension and bleed during retroperitoneal surgeries."
+                        }
+                    ],
+                    "mnemonics": [
+                        {
+                            "code": "DAV",
+                            "explanation": "Relations in Lesser Omentum:<br><strong>D</strong>uct (Bile) - Right Anterior<br><strong>A</strong>rtery (Hepatic) - Left Anterior<br><strong>V</strong>ein (Portal) - Posterior"
+                        },
+                        {
+                            "code": "3 S",
+                            "explanation": "Formation of Portal Vein:<br><strong>S</strong>plenic Vein + <strong>S</strong>uperior Mesenteric Vein behind the neck of Pancreas (retroperitoneal structure starting with <strong>S</strong>? No, but P for Pancreas)."
+                        }
+                    ],
+                    "quiz": [
+                        {
+                            "question": "The Portal Vein is formed by the union of:",
+                            "options": ["SMV and IMV", "SMV and Splenic Vein", "Splenic Vein and IMV", "Right and Left Gastric Veins"],
+                            "correct": 1,
+                            "explanation": "The Portal vein is formed by the confluence of the Superior Mesenteric Vein and the Splenic Vein. The IMV usually drains into the Splenic vein (or SMV) before this junction."
+                        },
+                        {
+                            "question": "In the hepatoduodenal ligament, the position of the Portal Vein is:",
+                            "options": ["Anterior to the Bile Duct", "Anterior to the Hepatic Artery", "Posterior to both Duct and Artery", "Medial to the Hepatic Artery"],
+                            "correct": 2,
+                            "explanation": "The Portal Vein lies posterior to both the Bile Duct (right anterior) and the Hepatic Artery Proper (left anterior) in the free edge of the lesser omentum."
+                        },
+                        {
+                            "question": "Oesophageal varices are caused by dilation of anastomoses between:",
+                            "options": ["Left Gastric and Azygos veins", "Right Gastric and Hemiazygos veins", "Short Gastric and Splenic veins", "Superior and Inferior Thyroid veins"],
+                            "correct": 0,
+                            "explanation": "The connection is between the esophageal tributaries of the Left Gastric Vein (Portal) and the esophageal tributaries of the Azygos system (Systemic). High pressure causes them to dilate and potentially rupture."
+                        },
+                        {
+                            "question": "Which of the following veins drains directly into the Portal Vein?",
+                            "options": ["Inferior Mesenteric Vein", "Renal Vein", "Left Gastric Vein", "Hepatic Veins"],
+                            "correct": 2,
+                            "explanation": "The Left Gastric Vein and Right Gastric Vein drain directly into the Portal Vein. The IMV typically drains into the Splenic Vein. Hepatic veins drain FROM the liver into the IVC."
+                        },
+                        {
+                            "question": "Caput Medusae is a sign of portal hypertension at which anatomical site?",
+                            "options": ["Lower Esophagus", "Anal Canal", "Umbilicus", "Bare area of liver"],
+                            "correct": 2,
+                            "explanation": "Caput Medusae refers to distended subcutaneous veins radiating from the umbilicus, caused by the recanalization of the para-umbilical veins anastomosing with systemic epigastric veins."
+                        }
+                    ],
+                    "viva": [
+                        {
+                            "question": "Define the Portal System and Portal Hypertension.",
+                            "answer": "A portal system is a system of vessels where blood passes through two sets of capillaries before returning to the heart (Intestine capillaries → Portal Vein → Liver sinusoids → Hepatic Veins → IVC). <br><strong>Portal Hypertension</strong> is a pathological increase in portal venous pressure (normal 5-10 mmHg, hypertension >12 mmHg), commonly due to cirrhosis, leading to the opening of portocaval anastomoses."
+                        },
+                        {
+                            "question": "Enumerate the sites of Portocaval Anastomosis.",
+                            "answer": "1. <strong>Lower end of Oesophagus:</strong> Left Gastric vs Azygos.<br>2. <strong>Anal Canal:</strong> Superior Rectal vs Middle/Inferior Rectal.<br>3. <strong>Umbilicus:</strong> Para-umbilical vs Superficial Epigastric.<br>4. <strong>Bare area of Liver:</strong> Portal venules vs Phrenic veins.<br>5. <strong>Retroperitoneum:</strong> Colic veins vs Renal/Lumbar veins (Retzius)."
+                        },
+                        {
+                            "question": "Why is the portal vein unique?",
+                            "answer": "1. It starts in capillaries (GI tract) and ends in capillaries (Liver sinusoids), acting as a functional artery for the liver (supplying 75% of blood, though deoxygenated, it is nutrient-rich).<br>2. It has no valves."
+                        },
+                        {
+                            "question": "What is the danger of cutting the Hepatoduodenal ligament during surgery?",
+                            "answer": "The hepatoduodenal ligament (free edge of lesser omentum) contains the Portal Triad: Bile Duct, Hepatic Artery, and Portal Vein. Accidental injury triggers the Pringle Manoeuvre (clamping the ligament) to control bleeding from the liver inflow, but prolonging this causes liver ischemia."
+                        }
+                    ]
+                }
+            }
+        };
+
+        // --- STATE ---
+        let currentTopicId = null;
+        let currentModule = null;
+        let currentCardIndex = 0;
+
+        // --- RENDERERS ---
+
+        function renderHome() {
+            currentTopicId = null;
+            const main = document.getElementById('main-content');
+            document.getElementById('nav-breadcrumbs').innerHTML = 'Home';
+
+            main.innerHTML = `
+            <div class="topic-grid">
+                ${Object.values(anatomyData).map(topic => `
+                    <div class="topic-card" onclick="renderTopic('${topic.topicId}')" role="button">
+                        <div class="topic-number">Topic ${topic.topicId}</div>
+                        <div class="topic-title">${topic.title}</div>
+                        <div style="margin-top:1rem; color:var(--primary-color);">Click to Study &rarr;</div>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="margin-top: 3rem; text-align: center; color: #555;">
+                <p>Based on BD Chaurasia Vol 2 • Designed for MBBS Year 1</p>
+            </div>
+        `;
+        }
+
+        function renderTopic(id) {
+            // Find topic by numeric ID in the object
+            const key = Object.keys(anatomyData).find(k => anatomyData[k].topicId == id);
+            if (!key) return;
+
+            currentTopicId = key;
+            const topic = anatomyData[key];
+
+            document.getElementById('nav-breadcrumbs').innerHTML = `
+            <span style="cursor:pointer" onclick="renderHome()">Home</span> &gt; <span style="color:var(--primary-color)">${topic.title}</span>
+        `;
+
+            renderModule(key, 'learn');
+        }
+
+        function renderModule(topicKey, moduleType) {
+            const topic = anatomyData[topicKey];
+            const main = document.getElementById('main-content');
+            currentModule = moduleType;
+
+            const navHtml = `
+            <div class="module-nav">
+                <button class="nav-btn ${moduleType === 'learn' ? 'active' : ''}" onclick="renderModule('${topicKey}', 'learn')">📖 Learn</button>
+                <button class="nav-btn ${moduleType === 'flashcards' ? 'active' : ''}" onclick="renderModule('${topicKey}', 'flashcards')">🃏 Flashcards</button>
+                <button class="nav-btn ${moduleType === 'mnemonics' ? 'active' : ''}" onclick="renderModule('${topicKey}', 'mnemonics')">🧠 Mnemonics</button>
+                <button class="nav-btn ${moduleType === 'quiz' ? 'active' : ''}" onclick="renderModule('${topicKey}', 'quiz')">✍️ Quiz</button>
+                <button class="nav-btn ${moduleType === 'viva' ? 'active' : ''}" onclick="renderModule('${topicKey}', 'viva')">🎤 Viva</button>
+            </div>
+        `;
+
+            let contentHtml = '';
+
+            if (moduleType === 'learn') {
+                contentHtml = `<div class="animate-fade">${topic.modules.learn}</div>`;
+            }
+            else if (moduleType === 'flashcards') {
+                currentCardIndex = 0;
+                contentHtml = `
+                <div id="fc-root" class="animate-fade">
+                    ${getFlashcardHtml(topicKey, 0)}
+                </div>
+            `;
+            }
+            else if (moduleType === 'mnemonics') {
+                contentHtml = `
+                <div class="mnemonic-grid animate-fade">
+                    ${topic.modules.mnemonics.map((m, i) => `
+                        <div class="mnemonic-card">
+                            <div class="mnemonic-code" onclick="toggleMnemonic(${i})">
+                                ${m.code.split('').map(char => `<span class="m-char">${char}</span>`).join('')}
+                            </div>
+                            <div id="mnem-${i}" class="mnemonic-full">
+                                ${m.explanation}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <p style="margin-top:2rem; text-align:center; color:#666;">Click the letters to reveal detailed explanations.</p>
+            `;
+            }
+            else if (moduleType === 'quiz') {
+                contentHtml = `
+                <div class="quiz-container animate-fade">
+                    ${topic.modules.quiz.map((q, i) => `
+                        <div class="quiz-question">
+                            <div class="q-text">Q${i + 1}. ${q.question}</div>
+                            <div class="options">
+                                ${q.options.map((opt, optIdx) => `
+                                    <button class="option-btn" id="q${i}-opt${optIdx}" onclick="checkAnswer(${i}, ${optIdx}, ${q.correct}, '${topicKey}')">${opt}</button>
+                                `).join('')}
+                            </div>
+                            <div id="q${i}-expl" class="explanation">
+                                <strong>${q.correct} Explanation:</strong> ${q.explanation}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            }
+            else if (moduleType === 'viva') {
+                contentHtml = `
+                <div class="accordion animate-fade">
+                    ${topic.modules.viva.map((v, i) => `
+                        <div class="acc-item">
+                            <div class="acc-header" onclick="toggleAccordion('viva-${i}')">
+                                <span class="acc-title">Q: ${v.question}</span>
+                                <span>&#9660;</span>
+                            </div>
+                            <div id="viva-${i}" class="acc-content">
+                                ${v.answer}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            }
+
+            main.innerHTML = `
+            <h2>${topic.title}</h2>
+            ${navHtml}
+            ${contentHtml}
+        `;
+        }
+
+        // --- INTERACTIVITY UTILS ---
+
+        function getFlashcardHtml(topicKey, index) {
+            const cards = anatomyData[topicKey].modules.flashcards;
+            const card = cards[index];
+            const total = cards.length;
+
+            return `
+            <div class="flashcard-container" onclick="this.querySelector('.flashcard').classList.toggle('flipped')">
+                <div class="flashcard">
+                    <div class="card-face card-front">
+                        <div class="card-content">${card.front}</div>
+                        <div class="card-hint">(Tap to flip)</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="card-content">${card.back}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flashcard-controls">
+                <button class="btn" onclick="prevCard('${topicKey}')" ${index === 0 ? 'disabled' : ''}>&larr; Prev</button>
+                <span style="align-self:center; color:var(--text-secondary);">${index + 1} / ${total}</span>
+                <button class="btn" onclick="nextCard('${topicKey}')" ${index === total - 1 ? 'disabled' : ''}>Next &rarr;</button>
+            </div>
+        `;
+        }
+
+        function nextCard(topicKey) {
+            const cards = anatomyData[topicKey].modules.flashcards;
+            if (currentCardIndex < cards.length - 1) {
+                currentCardIndex++;
+                document.getElementById('fc-root').innerHTML = getFlashcardHtml(topicKey, currentCardIndex);
+            }
+        }
+
+        function prevCard(topicKey) {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                document.getElementById('fc-root').innerHTML = getFlashcardHtml(topicKey, currentCardIndex);
+            }
+        }
+
+        function toggleMnemonic(index) {
+            const el = document.getElementById(`mnem-${index}`);
+            el.classList.toggle('visible');
+        }
+
+        function checkAnswer(qIdx, selectedIdx, correctIdx, topicKey) {
+            const qOptions = document.querySelectorAll(`#q${qIdx}-opt${selectedIdx}`); // get specific clicked btn
+            const allOptions = document.querySelectorAll(`[id^='q${qIdx}-opt']`);
+            const explanation = document.getElementById(`q${qIdx}-expl`);
+
+            // Disable all buttons for this question
+            allOptions.forEach(btn => btn.disabled = true);
+
+            if (selectedIdx === correctIdx) {
+                document.getElementById(`q${qIdx}-opt${selectedIdx}`).classList.add('correct');
+            } else {
+                document.getElementById(`q${qIdx}-opt${selectedIdx}`).classList.add('wrong');
+                document.getElementById(`q${qIdx}-opt${correctIdx}`).classList.add('correct');
+            }
+
+            explanation.style.display = 'block';
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle('visible');
+        }
+
+        // Init
+        window.onload = renderHome;
+
+    </script>
+</body>
+
+</html>
